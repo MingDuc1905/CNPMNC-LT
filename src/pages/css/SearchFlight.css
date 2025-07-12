@@ -1,0 +1,28 @@
+.search-flight {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f1f1f1;
+    border-radius: 8px;
+  }
+  
+  .search-flight input {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .search-flight button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .search-flight button:hover {
+    background-color: #0056b3;
+  }
+  

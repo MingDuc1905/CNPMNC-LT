@@ -1,0 +1,30 @@
+.user-booking {
+    padding: 20px;
+    background: #ffffff;
+  }
+  
+  .user-booking button {
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .user-booking button:hover {
+    background: #0056b3;
+  }
+  
+  .user-booking ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .user-booking li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  

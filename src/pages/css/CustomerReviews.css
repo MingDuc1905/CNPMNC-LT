@@ -1,0 +1,20 @@
+.customer-reviews {
+    padding: 20px;
+    background-color: #f8f9fa;
+  }
+  
+  .customer-reviews h2 {
+    text-align: center;
+    color: #007bff;
+  }
+  
+  .customer-reviews ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .customer-reviews li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  

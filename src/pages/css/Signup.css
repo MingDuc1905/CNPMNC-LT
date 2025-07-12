@@ -1,0 +1,90 @@
+/* --- Bố cục cho toàn bộ trang xác thực --- */
+.auth-page {
+  display: flex;
+  justify-content: center; /* Căn giữa form theo chiều ngang */
+  align-items: center;    /* Căn giữa form theo chiều dọc */
+  padding: 4rem 2rem;     /* Thêm đệm xung quanh */
+  box-sizing: border-box;
+}
+
+/* --- Khung chứa form --- */
+.auth-form-container {
+  background-color: #fff;
+  /* === THAY ĐỔI Ở ĐÂY === */
+  padding: 2.5rem;      /* Giữ nguyên padding */
+  max-width: 400px;  /* Giảm chiều rộng tối đa của form */
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  width: 100%;
+  text-align: center;
+}
+
+.auth-form-container h2 {
+  margin-top: 0;
+  font-size: 1.8rem;
+  color: #1a2a4d;
+}
+
+.auth-form-container p {
+  color: #6c757d;
+  margin-bottom: 2rem;
+}
+
+/* --- Các nhóm input trong form --- */
+.form-group {
+  margin-bottom: 1.5rem;
+  text-align: left; 
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 8px;
+  font-size: 1rem;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+/* --- Nút bấm --- */
+.auth-button {
+  width: 100%;
+  padding: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #007bff;
+  color: white;
+  font-size: 1.1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.auth-button:hover {
+  background-color: #0056b3;
+}
+
+.auth-button:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+
+/* --- Thông báo lỗi --- */
+.error-message {
+  color: #dc3545;
+  margin-top: 1rem;
+  font-weight: 500;
+}

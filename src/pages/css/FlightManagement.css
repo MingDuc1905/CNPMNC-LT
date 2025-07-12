@@ -1,0 +1,37 @@
+.flight-management {
+    padding: 20px;
+    background: #f8f9fa;
+  }
+  
+  .add-flight input {
+    padding: 10px;
+    margin: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .add-flight button {
+    padding: 10px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .add-flight button:hover {
+    background: #0056b3;
+  }
+  
+  .flight-management ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .flight-management li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  

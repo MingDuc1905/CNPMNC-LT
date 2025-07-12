@@ -1,0 +1,43 @@
+.services-menu-container {
+  max-width: 900px;
+  /* THAY ĐỔI: Bỏ margin âm để menu không còn đè lên banner */
+  margin: 2rem auto; 
+  position: relative;
+  z-index: 3;
+}
+
+.services-grid {
+  display: flex;
+  justify-content: space-around;
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.service-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.service-item:hover {
+  background-color: #f0f8ff;
+}
+
+.service-icon {
+  font-size: 2.5rem;
+  color: #0056b3;
+}
+
+.service-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+}

@@ -1,0 +1,20 @@
+.popular-flights {
+    padding: 20px;
+    background-color: #ffffff;
+    text-align: center;
+  }
+  
+  .popular-flights h2 {
+    color: #007bff;
+  }
+  
+  .popular-flights ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .popular-flights li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+  }
+  

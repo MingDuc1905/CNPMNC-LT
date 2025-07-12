@@ -1,0 +1,15 @@
+.support {
+    text-align: center;
+    padding: 20px;
+    background-color: #e3f2fd;
+  }
+  
+  .support h2 {
+    color: #007bff;
+  }
+  
+  .support p {
+    font-size: 1.1em;
+    margin: 5px 0;
+  }
+  
