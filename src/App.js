@@ -1,16 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-// 1. IMPORT CÁC TRANG CỦA BẠN
+// Import các trang
 import HomePage from './pages/HomePages'; 
 import LoginPage from './pages/Login';
 import SignupPage from './pages/Signup';
 import SearchFlightPage from './pages/SearchFlight';
-import BookingPage from './pages/BookingPage'; // 
+import UserBookingPage from './pages/UserBooking'; // Tên file có thể khác
 import siteLogo from './assets/images/logo.png';
-import PaymentPage from './pages/PaymentPage';
-import PaymentSuccess from './pages/PaymentSuccess';
-
+import BookingPage from './pages/BookingPage'; 
 // Import file CSS chính
 import './App.css';
 
@@ -23,6 +21,7 @@ function App() {
         <header className="site-header">
           {/* Tầng trên: Thanh thông tin phụ */}
           <div className="top-bar">
+            {/* THÊM CONTAINER Ở ĐÂY */}
             <div className="container">
               <div className="top-bar-left">
                 <span>✈️ SKY PREMIER chuyển toàn bộ chuyến bay nội địa sang nhà ga T3 Tân Sơn Nhất</span>
@@ -38,13 +37,12 @@ function App() {
 
           {/* Tầng dưới: Thanh điều hướng chính */}
           <nav className="main-nav">
+            {/* THÊM CONTAINER Ở ĐÂY */}
             <div className="container">
               <Link to="/" className="navbar-brand">
                 <img src={siteLogo} alt="SkyPremier Logo" style={{height: '40px'}} />
                 <span>SkyPremier</span>
               </Link>
-              {/* === CẬP NHẬT THỨ TỰ CÁC LIÊN KẾT CHÍNH === */}
-              {/* Đưa mục quan trọng nhất "Mua vé" lên đầu tiên */}
               <ul className="nav-links">
                 <li><Link to="/flights">Mua vé & Sản phẩm khác</Link></li>
                 <li><Link to="/plan">Lên kế hoạch</Link></li>
@@ -63,12 +61,8 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/flights" element={<SearchFlightPage />} />
-              <Route path="/booking/:id" element={<BookingPage />} />
-            <Route path="/payment" element={<PaymentPage />} />
-            <Route path="/payment-success" element={<PaymentSuccess />} />
-
-
-
+            <Route path="/bookings" element={<UserBookingPage />} />
+            <Route path="/booking/:id" element={<BookingPage />} />
 
             {/* Các route placeholder cho các link mới trên menu */}
             <Route path="/help" element={<div>Trang Trợ giúp</div>} />

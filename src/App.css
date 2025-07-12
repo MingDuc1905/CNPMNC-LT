@@ -443,3 +443,34 @@ body {
   padding: 1.5rem;
   margin-top: 2rem;
 }
+/* Thêm vào cuối file App.css */
+
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 15px;
+  padding-right: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.top-bar, .main-nav {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.top-bar-left, .top-bar-right, .nav-links {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

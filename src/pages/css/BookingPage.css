@@ -149,3 +149,105 @@ h2, h3 {
   border: 0;
   border-top: 1px dashed #ccc;
 }
+
+/* Thêm vào cuối file /css/BookingPage.css */
+
+.ticket-center {
+  background-color: #f8f9fa;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #e9ecef;
+}
+
+.ticket-center h3 {
+  margin-top: 0;
+  font-size: 18px;
+  color: #333;
+}
+
+.ticket-center .flight-number {
+  background-color: #e7f3ff;
+  color: #005a9e;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  display: inline-block;
+  margin-bottom: 16px;
+}
+
+.booking-summary {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.flight-route-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.route-point {
+  display: flex;
+  flex-direction: column;
+}
+
+.route-point .time {
+  font-size: 22px;
+  font-weight: bold;
+  color: #000;
+  margin: 0 0 4px 0;
+}
+
+.route-point .location-code {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.route-point .airport-name {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+}
+
+.route-line {
+  flex-grow: 1;
+  text-align: center;
+}
+
+.route-line .duration {
+  font-size: 13px;
+  color: #555;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.line-with-plane {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.line-with-plane hr {
+  flex-grow: 1;
+  border: none;
+  border-top: 1px dashed #ccc;
+}
+
+.line-with-plane .dot {
+  width: 8px;
+  height: 8px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+.line-with-plane .plane-icon {
+  color: #007bff;
+  font-size: 20px;
+  margin: 0 8px;
+}

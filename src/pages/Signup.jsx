@@ -1,83 +1,97 @@
+
+// src/pages/Signup.jsx
+
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import './css/Signup.css'; 
+import './css/Signup.css';
 
-function SignupPage() {
-  // THAY ĐỔI 1: Cập nhật state để khớp với backend
-  const [formData, setFormData] = useState({
-    ho_ten: '',
-    email: '',
-    mat_khau: '',
-    sdt: ''
-  });
-  const [message, setMessage] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const navigate = useNavigate();
+import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaPlane } from 'react-icons/fa';
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
+const Signup = () => {
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setMessage('');
-
-    try {
-      // API endpoint đã đúng, body sẽ được gửi đi từ state đã thay đổi
-      const response = await fetch('http://localhost:5001/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Đã có lỗi xảy ra.');
-      }
-      
-      alert('Đăng ký thành công! Bạn sẽ được chuyển đến trang đăng nhập.');
-      navigate('/login');
-
-    } catch (error) {
-      setMessage(error.message);
-    } finally {
-      setIsLoading(false);
-    }
+    console.log('Tên đăng nhập:', username);
+    console.log('Email:', email);
+    console.log('Mật khẩu:', password);
+    alert('Đăng ký tài khoản thành công! (Đây là một demo frontend)');
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-form-container">
-        <h2>Tạo tài khoản SkyPremier</h2>
-        <p>Bắt đầu hành trình của bạn với chúng tôi.</p>
-        <form onSubmit={handleSubmit}>
-          {/* THAY ĐỔI 2: Cập nhật các trường input trong form */}
-          <div className="form-group">
-            <label>Họ và tên</label>
-            <input type="text" name="ho_ten" onChange={handleChange} required />
-          </div>
-          <div className="form-group">
-            <label>Email</label>
-            <input type="email" name="email" onChange={handleChange} required />
-          </div>
-          <div className="form-group">
-            <label>Số điện thoại</label>
-            <input type="tel" name="sdt" onChange={handleChange} />
-          </div>
-          <div className="form-group">
-            <label>Mật khẩu</label>
-            <input type="password" name="mat_khau" onChange={handleChange} required />
-          </div>
-          <button type="submit" className="auth-button" disabled={isLoading}>
-            {isLoading ? 'Đang xử lý...' : 'Đăng ký'}
-          </button>
-        </form>
-        {message && <p className="error-message">{message}</p>}
+    <div className="signup-container">
+      <div className="signup-card">
+        <h2>Đăng ký tài khoản</h2>
+
+        {/* === BẮT ĐẦU KHỐI FORM MỚI === */}
+        <div className="signup-form-content">
+          <form onSubmit={handleSubmit} style={{ width: '100%', textAlign: 'center' }}> {/* Thêm style inline để form căn giữa các input */}
+            {/* Input cho Tên đăng nhập */}
+            <div className="input-group">
+              <FaUser className="icon" />
+              <input
+                type="text"
+                placeholder="Tên đăng nhập"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                className="has-icon"
+              />
+            </div>
+
+            {/* Input cho Địa chỉ email / Số điện thoại */}
+            <div className="input-group">
+              <FaEnvelope className="icon" />
+              <input
+                type="text"
+                placeholder="yourname@email.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="has-icon"
+              />
+            </div>
+
+            {/* Input cho Mật khẩu */}
+            <div className="input-group">
+              <FaLock className="icon" />
+              <input
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="has-icon"
+              />
+              <span
+                className="toggle-password"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </span>
+            </div>
+            {/* Đóng form ở đây, trước khi đến máy bay và chữ SkyPremier */}
+          </form>
+        </div>
+        {/* === KẾT THÚC KHỐI FORM MỚI === */}
+
+        {/* Icon máy bay lớn mờ - Nằm giữa form và chữ SkyPremier */}
+        <div className="airplane-bg">
+          <FaPlane />
+        </div>
+
+        {/* Chữ SkyPremier */}
+        <p className="skypremier-text">SkyPremier</p>
+
+        {/* Nút Đăng ký */}
+        <button type="submit" className="signup-button">
+          <FaPlane className="airplane-icon" />
+        </button>
       </div>
     </div>
   );
-}
+};
 
-export default SignupPage;
+export default Signup;

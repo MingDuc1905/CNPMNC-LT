@@ -26,8 +26,8 @@ app.use(cors());
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: '',
-    database: 'SkyPremier',
+    password: 'Mh05072005@',
+    database: 'SkyPremier2',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -90,27 +90,38 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// ==== API CHUYẾN BAY ====
+// CẬP NHẬT: API tìm kiếm để xử lý logic tìm theo tên thành phố
 app.get('/api/flights/search', async (req, res) => {
     try {
-        const { san_bay_di, san_bay_den, ngay_di } = req.query;
+        const { diem_di, diem_den, ngay_di } = req.query;
 
         let baseQuery = `
-            SELECT cb.*, MIN(g.GIA) AS GIA_VE_GOC
-            FROM CHUYEN_BAY cb
-            LEFT JOIN GIA_VE_THEO_HANG g ON cb.MACHUYEN = g.MACHUYEN
+            SELECT 
+                cb.*, 
+                sb_di.TEN_SAN_BAY AS TEN_SAN_BAY_DI,
+                tp_di.TEN_THANH_PHO AS TEN_THANH_PHO_DI,
+                sb_den.TEN_SAN_BAY AS TEN_SAN_BAY_DEN,
+                tp_den.TEN_THANH_PHO AS TEN_THANH_PHO_DEN,
+                MIN(g.GIA) AS GIA_VE_GOC
+            FROM 
+                CHUYEN_BAY cb
+                JOIN SAN_BAY sb_di ON cb.MA_SAN_BAY_DI = sb_di.MA_SAN_BAY
+                JOIN THANH_PHO tp_di ON sb_di.MA_THANH_PHO = tp_di.MA_THANH_PHO
+                JOIN SAN_BAY sb_den ON cb.MA_SAN_BAY_DEN = sb_den.MA_SAN_BAY
+                JOIN THANH_PHO tp_den ON sb_den.MA_THANH_PHO = tp_den.MA_THANH_PHO
+                LEFT JOIN GIA_VE_THEO_HANG g ON cb.MACHUYEN = g.MACHUYEN
         `;
 
         const conditions = [];
         const params = [];
 
-        if (san_bay_di) {
-            conditions.push('cb.SAN_BAY_DI LIKE ?');
-            params.push(`%${san_bay_di}%`);
+        if (diem_di) {
+            conditions.push('tp_di.TEN_THANH_PHO LIKE ?');
+            params.push(`%${diem_di}%`);
         }
-        if (san_bay_den) {
-            conditions.push('cb.SAN_BAY_DEN LIKE ?');
-            params.push(`%${san_bay_den}%`);
+        if (diem_den) {
+            conditions.push('tp_den.TEN_THANH_PHO LIKE ?');
+            params.push(`%${diem_den}%`);
         }
         if (ngay_di) {
             conditions.push('DATE(cb.GIO_DI) = ?');
@@ -118,52 +129,61 @@ app.get('/api/flights/search', async (req, res) => {
         }
 
         let finalQuery = baseQuery;
-        if (conditions.length) finalQuery += ' WHERE ' + conditions.join(' AND ');
+        if (conditions.length) {
+            finalQuery += ' WHERE ' + conditions.join(' AND ');
+        }
         finalQuery += ' GROUP BY cb.MACHUYEN';
 
         const [rows] = await pool.query(finalQuery, params);
         res.json(rows);
     } catch (err) {
-        console.error(err);
+        console.error('Lỗi khi tìm kiếm chuyến bay:', err);
         res.status(500).send('Lỗi tìm kiếm chuyến bay');
     }
 });
 
+
 app.get('/api/flights/popular', async (req, res) => {
     try {
-        const [rows] = await pool.query(`
-            SELECT cb.*, MIN(g.GIA) AS GIA_VE_GOC
-            FROM CHUYEN_BAY cb
-            LEFT JOIN GIA_VE_THEO_HANG g ON cb.MACHUYEN = g.MACHUYEN
-            GROUP BY cb.MACHUYEN
-            ORDER BY GIA_VE_GOC ASC
+        const query = `
+            SELECT 
+                cb.*, 
+                tp_di.TEN_THANH_PHO AS TEN_THANH_PHO_DI,
+                tp_den.TEN_THANH_PHO AS TEN_THANH_PHO_DEN,
+                MIN(g.GIA) AS GIA_VE_GOC
+            FROM 
+                CHUYEN_BAY cb
+                LEFT JOIN GIA_VE_THEO_HANG g ON cb.MACHUYEN = g.MACHUYEN
+                -- Thêm các JOIN còn thiếu để lấy tên thành phố
+                JOIN SAN_BAY sb_di ON cb.MA_SAN_BAY_DI = sb_di.MA_SAN_BAY
+                JOIN THANH_PHO tp_di ON sb_di.MA_THANH_PHO = tp_di.MA_THANH_PHO
+                JOIN SAN_BAY sb_den ON cb.MA_SAN_BAY_DEN = sb_den.MA_SAN_BAY
+                JOIN THANH_PHO tp_den ON sb_den.MA_THANH_PHO = tp_den.MA_THANH_PHO
+            GROUP BY 
+                cb.MACHUYEN
+            ORDER BY 
+                GIA_VE_GOC ASC
             LIMIT 7
-        `);
+        `;
+        const [rows] = await pool.query(query);
         res.json(rows);
     } catch (err) {
-        console.error(err);
-        res.status(500).send('Lỗi lấy danh sách phổ biến');
+        console.error('Lỗi khi lấy chuyến bay phổ biến:', err);
+        res.status(500).send('Lỗi phía server');
     }
 });
-
-app.get('/api/flights/:id', async (req, res) => {
-    try {
-        const { id } = req.params;
-        const [rows] = await pool.query(`
-            SELECT cb.*, MIN(g.GIA) AS GIA_VE_GOC
-            FROM CHUYEN_BAY cb
-            LEFT JOIN GIA_VE_THEO_HANG g ON cb.MACHUYEN = g.MACHUYEN
-            WHERE cb.MACHUYEN = ?
-            GROUP BY cb.MACHUYEN
-        `, [id]);
-
-        if (!rows.length) return res.status(404).json({ message: 'Không tìm thấy chuyến bay' });
-        res.json(rows[0]);
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Lỗi chi tiết chuyến bay');
-    }
-});
+app.get('/api/flights', (req, res) => {
+    // Lấy tất cả các cột từ bảng 'chuyen_bay' (hoặc tên bảng của bạn)
+    const sqlQuery = "SELECT * FROM chuyen_bay";
+  
+    db.query(sqlQuery, (err, results) => {
+      if (err) {
+        console.error('Lỗi truy vấn:', err);
+        return res.status(500).send('Lỗi phía server');
+      }
+      res.json(results); // Trả về một mảng chứa tất cả chuyến bay
+    });
+  });
 
 // ==== THANH TOÁN VNPAY ====
 app.post('/api/payment/create', (req, res) => {

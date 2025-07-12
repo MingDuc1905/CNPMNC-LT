@@ -131,34 +131,34 @@ if (error) {
           </label>
 
          <label>
-  Ngày đi:
-  <input
-    type="date"
-    value={ngayDi}
-    onChange={handleNgayDiChange}
-    min={minNgayDi.toISOString().split('T')[0]} // ✅ Giới hạn ngày tối thiểu
-    required
-  />
-</label>
+            Ngày đi:
+            <input
+              type="date"
+              value={ngayDi}
+              onChange={handleNgayDiChange}
+              min={minNgayDi.toISOString().split('T')[0]} // ✅ Giới hạn ngày tối thiểu
+              required
+            />
+          </label>
 
-{khuHoi && (
-  <label>
-    Ngày về:
-    <input
-      type="date"
-      value={ngayVe}
-      onChange={handleNgayVeChange}
-      min={
-        ngayDi
-          ? new Date(new Date(ngayDi).setDate(new Date(ngayDi).getDate() + 1))
-              .toISOString()
-              .split('T')[0]
-          : ''
-      }
-      required
-    />
-  </label>
-)}
+          {khuHoi && (
+            <label>
+              Ngày về:
+              <input
+                type="date"
+                value={ngayVe}
+                onChange={handleNgayVeChange}
+                min={
+                  ngayDi
+                    ? new Date(new Date(ngayDi).setDate(new Date(ngayDi).getDate() + 1))
+                        .toISOString()
+                        .split('T')[0]
+                    : ''
+                }
+                required
+              />
+            </label>
+          )}
 
 
           <label>

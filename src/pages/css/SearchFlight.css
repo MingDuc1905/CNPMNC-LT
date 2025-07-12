@@ -1,28 +1,92 @@
-.search-flight {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-    padding: 20px;
-    background-color: #f1f1f1;
-    border-radius: 8px;
-  }
-  
-  .search-flight input {
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .search-flight button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-  
-  .search-flight button:hover {
-    background-color: #0056b3;
-  }
-  
+.search-page-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+
+/* === Main Widget === */
+.search-widget-container {
+  background-color: #e0f4ff; /* Màu xanh dương nhạt */
+  border-radius: 16px;
+  padding: 24px 32px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  margin-bottom: 40px;
+}
+
+.search-widget-container h2 {
+  text-align: center;
+  font-size: 28px;
+  color: #003366;
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+/* === Form Layout === */
+.detailed-search-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-row {
+  display: flex;
+  flex-wrap: wrap; /* Cho phép xuống dòng trên màn hình nhỏ */
+  gap: 16px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.form-row > * {
+  flex: 1; /* Giúp các phần tử co giãn đều nhau */
+  min-width: 180px; /* Độ rộng tối thiểu trước khi xuống dòng */
+}
+
+/* === Input styles === */
+.detailed-search-form input,
+.detailed-search-form select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #b0c4de;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #fff;
+  box-sizing: border-box; /* Quan trọng để padding không làm tăng kích thước */
+}
+
+/* === Confirm Button === */
+.confirm-button {
+  background-color: #ffcc00; /* Màu vàng */
+  color: #003366; /* Màu chữ xanh đậm */
+  border: none;
+  border-radius: 8px;
+  padding: 14px 40px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.confirm-button:hover {
+  background-color: #ffb700;
+}
+
+.confirm-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* === Results Section === */
+.flight-results-container h3 {
+  font-size: 24px;
+  color: #003366;
+  border-bottom: 2px solid #e0f4ff;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.flights-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 24px;
+}
