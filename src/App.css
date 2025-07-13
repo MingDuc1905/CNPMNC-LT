@@ -474,3 +474,43 @@ body {
   align-items: center;
   gap: 10px;
 }
+/* Style cho khối thông tin người dùng (avatar và tên) */
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Khoảng cách giữa avatar và tên */
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  transition: opacity 0.3s;
+}
+
+.user-info:hover {
+  opacity: 0.8;
+}
+
+/* Style cho ảnh avatar tròn */
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #fff;
+}
+
+/* Style cho nút Đăng xuất để trông giống như một link */
+.logout-button {
+  background: none;
+  border: none;
+  color: white;
+  font-family: inherit; /* Dùng cùng font chữ của trang */
+  font-size: 0.9rem;   /* Dùng cùng kích thước chữ */
+  font-weight: 500;  /* Dùng cùng độ đậm nhạt */
+  cursor: pointer;
+  padding: 0;
+  margin-left: 1rem;
+}
+
+.logout-button:hover {
+  text-decoration: underline;
+}

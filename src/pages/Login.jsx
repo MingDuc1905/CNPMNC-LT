@@ -1,43 +1,56 @@
+// src/pages/Login.jsx
 
-import { useState } from "react"
-import { useNavigate } from "react-router-dom" // Import useNavigate hook
-import "./css/Login.css" // Đảm bảo DÒNG NÀY là Login.css
-import { FaUser, FaLock, FaEye, FaEyeSlash, FaPlane } from "react-icons/fa"
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from '../context/AuthContext'; // Import hook useAuth
+import "./css/Login.css"; // Đảm bảo bạn có file CSS này
+import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaPlane } from "react-icons/fa";
 
 const Login = () => {
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [showPassword, setShowPassword] = useState(false)
-  const [isLoading, setIsLoading] = useState(false)
+  const { login } = useAuth(); // Lấy hàm login từ context
+  const navigate = useNavigate();
 
-  const navigate = useNavigate() // Initialize navigate hook
+  const [formData, setFormData] = useState({
+    email: "",
+    mat_khau: ""
+  });
+  const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [message, setMessage] = useState('');
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setIsLoading(true)
+    e.preventDefault();
+    setIsLoading(true);
+    setMessage('');
 
     try {
-      // Simulate API call - replace with your actual authentication logic
-      console.log("Tên đăng nhập:", username)
-      console.log("Mật khẩu:", password)
+      const response = await fetch('http://localhost:5001/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
 
-      // Here you would typically make an API call to verify credentials
-      // For demo purposes, we'll simulate a successful login after 1 second
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      if (!response.ok) {
+        throw new Error(data.message || 'Đăng nhập thất bại.');
+      }
+      
+      // Sử dụng hàm login từ context để cập nhật trạng thái toàn cục
+      login(data.token);
+      
+      alert('Đăng nhập thành công!');
+      navigate("/"); // Chuyển về trang chủ
 
-      // Store user data in localStorage (optional)
-      localStorage.setItem("isLoggedIn", "true")
-      localStorage.setItem("username", username)
-
-      // Navigate to home page
-      navigate("/home") // or navigate('/') if home is at root
     } catch (error) {
-      console.error("Lỗi đăng nhập:", error)
-      alert("Đăng nhập thất bại! Vui lòng kiểm tra lại thông tin.")
+      setMessage(error.message);
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="signup-container">
@@ -45,27 +58,29 @@ const Login = () => {
         <h2>Đăng nhập</h2>
         <form onSubmit={handleSubmit} className="signup-form-content">
           <div className="input-group">
-            <FaUser className="icon" />
-            <input
-              type="text"
-              placeholder="Tên đăng nhập"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              className="has-icon"
-              disabled={isLoading}
+            <FaEnvelope className="icon" />
+            <input 
+              type="email" 
+              placeholder="Email" 
+              name="email" 
+              value={formData.email} 
+              onChange={handleChange} 
+              required 
+              className="has-icon" 
+              disabled={isLoading} 
             />
           </div>
           <div className="input-group">
             <FaLock className="icon" />
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Mật khẩu"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="has-icon"
-              disabled={isLoading}
+            <input 
+              type={showPassword ? "text" : "password"} 
+              placeholder="Mật khẩu" 
+              name="mat_khau" 
+              value={formData.mat_khau} 
+              onChange={handleChange} 
+              required 
+              className="has-icon" 
+              disabled={isLoading} 
             />
             <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -73,21 +88,15 @@ const Login = () => {
           </div>
         </form>
 
-        {/* Icon máy bay lớn mờ - Đảm bảo nó nằm ĐÚNG CHỖ này */}
-        <div className="airplane-bg">
-          <FaPlane />
-        </div>
-
-        {/* Chữ SkyPremier - Đảm bảo nó nằm ĐÚNG CHỖ này */}
+        <div className="airplane-bg"><FaPlane /></div>
         <p className="skypremier-text">SkyPremier</p>
-
-        {/* Nút Đăng nhập - Đảm bảo nó nằm ĐÚNG CHỖ này (cuối cùng trong signup-card) */}
+        {message && <p className="error-message" style={{color: 'red', marginBottom: '10px'}}>{message}</p>}
         <button type="submit" className="signup-button" disabled={isLoading} onClick={handleSubmit}>
           {isLoading ? <div className="loading-spinner">⟳</div> : <FaPlane className="airplane-icon" />}
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

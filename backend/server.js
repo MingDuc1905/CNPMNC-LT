@@ -26,7 +26,7 @@ app.use(cors());
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: '',
+    password: 'Mh05072005@',
     database: 'SkyPremier2',
     waitForConnections: true,
     connectionLimit: 10,
