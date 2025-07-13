@@ -2,18 +2,14 @@ import React from 'react';
 import './ServicesMenu.css';
 
 const services = [
-  { icon: '🧳', name: 'Hành lý trả trước' },
-  { icon: '✈️', name: 'Nâng hạng & chọn chỗ' },
-  { icon: '🛍️', name: 'Mua sắm' },
-  { icon: '🏨', name: 'Khách sạn & Tour' },
-  { icon: '🛡️', name: 'Bảo hiểm' },
-  { icon: '✨', name: 'Dịch vụ khác' },
+  { icon: '🎫', name: 'Miễn phí xuất vé' },
+  { icon: '⚡', name: 'Nhanh chóng, tiện lợi' },
+  { icon: '🎁', name: 'Ưu đãi ngập tràn' },
 ];
 
 function ServicesMenu() {
   return (
     <div className="services-menu-container">
-      {/* THÊM DÒNG TIÊU ĐỀ Ở ĐÂY */}
       <h2 className="services-title">KHÁM PHÁ LỢI ÍCH KHI ĐẶT VÉ TRỰC TUYẾN</h2>
 
       <div className="services-grid">

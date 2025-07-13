@@ -1,0 +1,19 @@
+.payment-container {
+  max-width: 800px;
+  margin: 60px auto;
+  padding: 40px;
+  background: #f0fdf4;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(0,0,0,0.1);
+}
+
+.payment-container h2 {
+  color: #007f3f;
+  margin-bottom: 20px;
+}
+
+.payment-container p {
+  font-size: 18px;
+  font-weight: bold;
+}

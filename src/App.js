@@ -9,6 +9,10 @@ import SearchFlightPage from './pages/SearchFlight';
 import UserBookingPage from './pages/UserBooking'; // Tên file có thể khác
 import siteLogo from './assets/images/logo.png';
 import BookingPage from './pages/BookingPage'; 
+import PaymentPage from './pages/PaymentPage'; // hoặc đường dẫn tương ứng
+
+
+
 // Import file CSS chính
 import './App.css';
 
@@ -63,6 +67,8 @@ function App() {
             <Route path="/flights" element={<SearchFlightPage />} />
             <Route path="/bookings" element={<UserBookingPage />} />
             <Route path="/booking/:id" element={<BookingPage />} />
+            <Route path="/payment" element={<PaymentPage />} />
+
 
             {/* Các route placeholder cho các link mới trên menu */}
             <Route path="/help" element={<div>Trang Trợ giúp</div>} />

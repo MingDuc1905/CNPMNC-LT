@@ -26,7 +26,7 @@ app.use(cors());
 const pool = mysql.createPool({
     host: 'localhost',
     user: 'root',
-    password: 'Mh05072005@',
+    password: '',
     database: 'SkyPremier2',
     waitForConnections: true,
     connectionLimit: 10,
@@ -147,20 +147,33 @@ app.get('/api/flights/popular', async (req, res) => {
     try {
         const query = `
             SELECT 
-                cb.*, 
+                cb.MACHUYEN,
+                cb.SO_HIEU_CHUYEN_BAY,
+                cb.HANG_HANG_KHONG,
+                cb.MA_SAN_BAY_DI,
+                cb.MA_SAN_BAY_DEN,
+                cb.GIO_DI,
+                cb.GIO_DEN,
                 tp_di.TEN_THANH_PHO AS TEN_THANH_PHO_DI,
                 tp_den.TEN_THANH_PHO AS TEN_THANH_PHO_DEN,
                 MIN(g.GIA) AS GIA_VE_GOC
             FROM 
                 CHUYEN_BAY cb
                 LEFT JOIN GIA_VE_THEO_HANG g ON cb.MACHUYEN = g.MACHUYEN
-                -- Thêm các JOIN còn thiếu để lấy tên thành phố
                 JOIN SAN_BAY sb_di ON cb.MA_SAN_BAY_DI = sb_di.MA_SAN_BAY
                 JOIN THANH_PHO tp_di ON sb_di.MA_THANH_PHO = tp_di.MA_THANH_PHO
                 JOIN SAN_BAY sb_den ON cb.MA_SAN_BAY_DEN = sb_den.MA_SAN_BAY
                 JOIN THANH_PHO tp_den ON sb_den.MA_THANH_PHO = tp_den.MA_THANH_PHO
             GROUP BY 
-                cb.MACHUYEN
+                cb.MACHUYEN,
+                cb.SO_HIEU_CHUYEN_BAY,
+                cb.HANG_HANG_KHONG,
+                cb.MA_SAN_BAY_DI,
+                cb.MA_SAN_BAY_DEN,
+                cb.GIO_DI,
+                cb.GIO_DEN,
+                tp_di.TEN_THANH_PHO,
+                tp_den.TEN_THANH_PHO
             ORDER BY 
                 GIA_VE_GOC ASC
             LIMIT 7
@@ -169,21 +182,11 @@ app.get('/api/flights/popular', async (req, res) => {
         res.json(rows);
     } catch (err) {
         console.error('Lỗi khi lấy chuyến bay phổ biến:', err);
-        res.status(500).send('Lỗi phía server');
+        res.status(500).json({ error: 'Lỗi phía server' });
     }
 });
-app.get('/api/flights', (req, res) => {
-    // Lấy tất cả các cột từ bảng 'chuyen_bay' (hoặc tên bảng của bạn)
-    const sqlQuery = "SELECT * FROM chuyen_bay";
-  
-    db.query(sqlQuery, (err, results) => {
-      if (err) {
-        console.error('Lỗi truy vấn:', err);
-        return res.status(500).send('Lỗi phía server');
-      }
-      res.json(results); // Trả về một mảng chứa tất cả chuyến bay
-    });
-  });
+
+
 
 // ==== THANH TOÁN VNPAY ====
 app.post('/api/payment/create', (req, res) => {
@@ -194,27 +197,26 @@ app.post('/api/payment/create', (req, res) => {
     console.log("Amount nhận được từ client:", amount);
 
     const orderId = moment().format('YYYYMMDDHHmmss');
-    const orderInfo = 'Thanh toan ve may bay SkyPremier'; // KHÔNG DẤU
-    const locale = 'vn';
+const orderInfo = 'ThanhToanVeMayBay';    const locale = 'vn';
 
     const vnp_Params = {
-        vnp_Version: '2.1.0',
-        vnp_Command: 'pay',
-        vnp_TmnCode,
-        vnp_Locale: locale,
-        vnp_CurrCode: 'VND',
-        vnp_TxnRef: orderId,
-        vnp_OrderInfo: orderInfo,
-        vnp_OrderType: 'other',
-        vnp_Amount: amount * 100,
-        vnp_ReturnUrl,
-        vnp_IpAddr: ipAddr,
-        vnp_CreateDate: orderId,
-    };
+    vnp_Version: '2.1.0',
+    vnp_Command: 'pay',
+    vnp_TmnCode,
+    vnp_Locale: locale,
+    vnp_CurrCode: 'VND',
+    vnp_TxnRef: orderId,
+    vnp_OrderInfo: encodeURIComponent(orderInfo), // <-- Đã mã hóa ở đây
+    vnp_OrderType: 'other',
+    vnp_Amount: amount * 100,
+    vnp_ReturnUrl: encodeURIComponent(vnp_ReturnUrl), // <-- ReturnUrl cũng nên mã hóa
+    vnp_IpAddr: ipAddr,
+    vnp_CreateDate: orderId,
+};
 
     const sortedParams = sortObject(vnp_Params);
     const signData = querystring.stringify(sortedParams, { encode: false });
-    const hmac = crypto.createHmac('sha512', vnp_HashSecret);
+const hmac = crypto.createHmac('sha256', vnp_HashSecret);
     const signed = hmac.update(Buffer.from(signData, 'utf-8')).digest('hex');
     sortedParams.vnp_SecureHash = signed;
 
