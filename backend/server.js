@@ -22,18 +22,18 @@ const port = 5001;
 app.use(express.json());
 app.use(cors());
 
-// ==== KẾT NỐI DATABASE ====
+// ==== KẾT NỐI DATABASE (sử dụng biến môi trường) ====
 const pool = mysql.createPool({
-    host: 'localhost',
-    user: 'root',
-    password: 'Mh05072005@',
-    database: 'SkyPremier2',
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || '',
+    database: process.env.DB_DATABASE || 'SkyPremier',
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
 });
 
-const JWT_SECRET = "your_super_secret_key_that_is_long_and_random";
+const JWT_SECRET = process.env.JWT_SECRET || "your_super_secret_key_that_is_long_and_random";
 
 // ==== CẤU HÌNH VNPAY ====
 const vnp_TmnCode = process.env.VNP_TMNCODE;
