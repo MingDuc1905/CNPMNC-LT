@@ -1,19 +1,20 @@
 // src/components/PopularFlights.jsx
 
 import React, { useState, useEffect } from 'react';
-import FlightCard from './FlightCard'; 
-import './PopularFlights.css'; 
+import FlightCard from './FlightCard';
+import './PopularFlights.css';
+import API_BASE_URL from '../config/api';
 
 function PopularFlights() {
   const [popularFlights, setPopularFlights] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/flights/popular') 
+    fetch(`${API_BASE_URL}/api/flights/popular`)
       .then(response => response.json())
       .then(data => {
         if (Array.isArray(data)) {
-          setPopularFlights(data); 
+          setPopularFlights(data);
           localStorage.setItem('searchResults', JSON.stringify(data)); // ✅ Lưu để BookingPage đọc
         } else {
           setPopularFlights([]);

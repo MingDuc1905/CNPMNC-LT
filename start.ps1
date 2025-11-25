@@ -13,7 +13,22 @@ Write-Host ""
 # Dừng các tiến trình node đang chạy
 Write-Host "[1/4] Dung cac tien trinh cu..." -ForegroundColor Yellow
 Stop-Process -Name node -Force -ErrorAction SilentlyContinue
-Start-Sleep -Seconds 2
+
+# Kill các process đang chiếm port 3000, 5001, 8080
+$ports = @(3000, 5001, 8080)
+foreach ($port in $ports) {
+    $connections = Get-NetTCPConnection -LocalPort $port -ErrorAction SilentlyContinue
+    foreach ($conn in $connections) {
+        Stop-Process -Id $conn.OwningProcess -Force -ErrorAction SilentlyContinue
+    }
+}
+
+# Kill tất cả terminal PowerShell cũ (trừ terminal hiện tại)
+$currentPID = $PID
+Get-Process pwsh -ErrorAction SilentlyContinue | Where-Object { $_.Id -ne $currentPID } | Stop-Process -Force -ErrorAction SilentlyContinue
+
+Write-Host "   Da xoa tat ca process va terminal cu!" -ForegroundColor Green
+Start-Sleep -Seconds 3
 
 # Khởi động Backend
 Write-Host "[2/4] Khoi dong Backend API (port 5001)..." -ForegroundColor Yellow
@@ -27,14 +42,15 @@ Start-Process pwsh -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\Proje
 
 Start-Sleep -Seconds 5
 
-# Build và serve cho mạng LAN
-Write-Host "[4/4] Build va serve cho mang LAN (port 8080)..." -ForegroundColor Yellow
-cd "$PSScriptRoot\ProjectCNPM"
+# Khởi động Frontend cho mạng LAN (port 8080) - TỰ ĐỘNG DETECT IP
+Write-Host "[4/4] Khoi dong Frontend LAN (port 8080) - Tu dong detect IP..." -ForegroundColor Yellow
 $env:REACT_APP_API_URL = "http://${NetworkIP}:5001"
-npm run build | Out-Null
-Start-Process pwsh -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\ProjectCNPM'; serve -s build -l 8080" -WindowStyle Normal
+$env:HOST = "0.0.0.0"
+$env:PORT = "8080"
+$env:BROWSER = "none"
+Start-Process pwsh -ArgumentList "-NoExit", "-Command", "cd '$PSScriptRoot\ProjectCNPM'; `$env:REACT_APP_API_URL='http://${NetworkIP}:5001'; `$env:HOST='0.0.0.0'; `$env:PORT='8080'; `$env:BROWSER='none'; `$env:CI='true'; npm start" -WindowStyle Normal
 
-Start-Sleep -Seconds 3
+Start-Sleep -Seconds 5
 
 Write-Host ""
 Write-Host "=== HOAN TAT! ===" -ForegroundColor Green

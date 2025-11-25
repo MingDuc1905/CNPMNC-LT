@@ -26,11 +26,12 @@ app.use(express.json());
 app.use(cors());
 
 // ==== KẾT NỐI SQL SERVER ====
+// ⚠️ QUAN TRỌNG: Khi đổi máy, sửa DB_HOST trong file .env
 const config = {
-    server: 'DESKTOP-R7C4RRK\\SEVER01',
-    database: 'SkyPremier2',
-    user: 'sa',
-    password: '123456',
+    server: process.env.DB_HOST || 'DESKTOP-R7C4RRK\\SEVER01',
+    database: process.env.DB_DATABASE || 'SkyPremier2',
+    user: process.env.DB_USER || 'sa',
+    password: process.env.DB_PASSWORD || '123456',
     options: {
         encrypt: false,
         trustServerCertificate: true,
@@ -47,10 +48,19 @@ const config = {
 let pool;
 const connectDB = async () => {
     try {
+        console.log('🔄 Đang kết nối SQL Server:', config.server);
         pool = await sql.connect(config);
         console.log('✅ Kết nối SQL Server thành công!');
     } catch (err) {
-        console.error('❌ Lỗi kết nối SQL Server:', err);
+        console.error('❌ LỖI KẾT NỐI SQL SERVER!');
+        console.error('Server:', config.server);
+        console.error('Database:', config.database);
+        console.error('Chi tiết lỗi:', err.message);
+        console.error('');
+        console.error('💡 CÁCH SỬA:');
+        console.error('1. Kiểm tra SQL Server đang chạy');
+        console.error('2. Kiểm tra tên máy trong backend\\.env');
+        console.error('3. Chạy: Get-Service MSSQLSERVER (PowerShell)');
         process.exit(1);
     }
 };
@@ -65,29 +75,39 @@ const vnp_HashSecret = process.env.VNP_HASHSECRET;
 const vnp_Url = process.env.VNP_URL;
 const vnp_ReturnUrl = process.env.VNP_RETURNURL;
 
-// ==== AUTH (PLAIN TEXT PASSWORD - KHÔNG MÃ HÓA) ====
+// ==== AUTH (PLAIN TEXT PASSWORD - ⚠️ KHÔNG AN TOÀN!) ====
+// ⚠️ CẢNH BÁO BẢO MẬT:
+// 1. Mật khẩu KHÔNG được mã hóa - hacker vào DB đọc được hết
+// 2. KHÔNG validate input - dễ bị SQL Injection
+// 3. KHÔNG sanitize dữ liệu từ client
+// ⚠️ CHỈ DÙNG CHO HỌC TẬP/DEMO - TUYỆT ĐỐI KHÔNG DEPLOY LÊN PRODUCTION!
+
 app.post('/api/auth/register', async (req, res) => {
     const { email, mat_khau, ho_ten, sdt } = req.body;
+
+    // Validate cơ bản (vẫn yếu, không đủ bảo mật)
     if (!email || !mat_khau || !ho_ten) {
         return res.status(400).json({ message: 'Vui lòng điền đầy đủ thông tin.' });
     }
+
     try {
         const makh = 'KH' + Date.now().toString().slice(-6);
         const ma_loai_default = 'LTV01';
 
+        // ⚠️ LƯU MẬT KHẨU PLAIN TEXT - KHÔNG AN TOÀN!
         const request = pool.request();
         await request
             .input('makh', sql.VarChar, makh)
             .input('ho_ten', sql.NVarChar, ho_ten)
             .input('email', sql.VarChar, email)
             .input('sdt', sql.VarChar, sdt)
-            .input('mat_khau', sql.VarChar, mat_khau)
+            .input('mat_khau', sql.VarChar, mat_khau) // Plain text!
             .input('ma_loai', sql.VarChar, ma_loai_default)
             .query('INSERT INTO KHACH_HANG (MAKH, HO_TEN, EMAIL, SDT, MAT_KHAU, MA_LOAI) VALUES (@makh, @ho_ten, @email, @sdt, @mat_khau, @ma_loai)');
 
         res.status(201).json({ message: 'Đăng ký thành công!' });
     } catch (err) {
-        if (err.number === 2627) { // SQL Server duplicate key error
+        if (err.number === 2627) {
             return res.status(409).json({ message: 'Email đã tồn tại.' });
         }
         console.error(err);
@@ -97,16 +117,18 @@ app.post('/api/auth/register', async (req, res) => {
 
 app.post('/api/auth/login', async (req, res) => {
     const { email, mat_khau } = req.body;
+
+    // ⚠️ KHÔNG VALIDATE INPUT - DỄ BỊ SQL INJECTION
     try {
         const request = pool.request();
         const result = await request
-            .input('email', sql.VarChar, email)
+            .input('email', sql.VarChar, email) // Dùng parameterized query - tốt, nhưng chưa đủ
             .query('SELECT * FROM KHACH_HANG WHERE EMAIL = @email');
 
         const user = result.recordset[0];
         if (!user) return res.status(401).json({ message: 'Sai thông tin đăng nhập.' });
 
-        // So sánh plain text password
+        // ⚠️ SO SÁNH PLAIN TEXT PASSWORD - KHÔNG AN TOÀN!
         if (mat_khau !== user.MAT_KHAU) {
             return res.status(401).json({ message: 'Sai thông tin đăng nhập.' });
         }
@@ -124,7 +146,9 @@ app.post('/api/auth/login', async (req, res) => {
     }
 });
 
-// CẬP NHẬT: API tìm kiếm để xử lý logic tìm theo tên thành phố
+// ==== API TÌM KIẾM CHUYẾN BAY ====
+// ⚠️ LƯU Ý: Đã dùng parameterized query (@diem_di, @ngay_di) - phòng SQL Injection
+// Nhưng vẫn thiếu: validate format email, phone, XSS protection, rate limiting
 app.get('/api/flights/search', async (req, res) => {
     try {
         const { diem_di, diem_den, ngay_di } = req.query;

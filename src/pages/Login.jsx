@@ -5,6 +5,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from '../context/AuthContext'; // Import hook useAuth
 import "./css/Login.css"; // Đảm bảo bạn có file CSS này
 import { FaEnvelope, FaLock, FaEye, FaEyeSlash, FaPlane } from "react-icons/fa";
+import API_BASE_URL from '../config/api';
 
 const Login = () => {
   const { login } = useAuth(); // Lấy hàm login từ context
@@ -28,7 +29,7 @@ const Login = () => {
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/login', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -38,10 +39,10 @@ const Login = () => {
       if (!response.ok) {
         throw new Error(data.message || 'Đăng nhập thất bại.');
       }
-      
+
       // Sử dụng hàm login từ context để cập nhật trạng thái toàn cục
       login(data.token);
-      
+
       alert('Đăng nhập thành công!');
       navigate("/"); // Chuyển về trang chủ
 
@@ -59,28 +60,28 @@ const Login = () => {
         <form onSubmit={handleSubmit} className="signup-form-content">
           <div className="input-group">
             <FaEnvelope className="icon" />
-            <input 
-              type="email" 
-              placeholder="Email" 
-              name="email" 
-              value={formData.email} 
-              onChange={handleChange} 
-              required 
-              className="has-icon" 
-              disabled={isLoading} 
+            <input
+              type="email"
+              placeholder="Email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              className="has-icon"
+              disabled={isLoading}
             />
           </div>
           <div className="input-group">
             <FaLock className="icon" />
-            <input 
-              type={showPassword ? "text" : "password"} 
-              placeholder="Mật khẩu" 
-              name="mat_khau" 
-              value={formData.mat_khau} 
-              onChange={handleChange} 
-              required 
-              className="has-icon" 
-              disabled={isLoading} 
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Mật khẩu"
+              name="mat_khau"
+              value={formData.mat_khau}
+              onChange={handleChange}
+              required
+              className="has-icon"
+              disabled={isLoading}
             />
             <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>
               {showPassword ? <FaEyeSlash /> : <FaEye />}
@@ -90,7 +91,7 @@ const Login = () => {
 
         <div className="airplane-bg"><FaPlane /></div>
         <p className="skypremier-text">SkyPremier</p>
-        {message && <p className="error-message" style={{color: 'red', marginBottom: '10px'}}>{message}</p>}
+        {message && <p className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{message}</p>}
         <button type="submit" className="signup-button" disabled={isLoading} onClick={handleSubmit}>
           {isLoading ? <div className="loading-spinner">⟳</div> : <FaPlane className="airplane-icon" />}
         </button>

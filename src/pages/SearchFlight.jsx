@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import FlightCard from '../components/FlightCard';
 import './css/SearchFlight.css'; // Đảm bảo bạn có file CSS này
+import API_BASE_URL from '../config/api';
 
 function SearchFlightPage() {
   const [searchUrlParams] = useSearchParams();
@@ -29,12 +30,12 @@ function SearchFlightPage() {
     setFlights([]);
 
     const activeParams = Object.fromEntries(
-        Object.entries(formData).filter(([_, value]) => value !== '')
+      Object.entries(formData).filter(([_, value]) => value !== '')
     );
     const queryString = new URLSearchParams(activeParams).toString();
 
     try {
-      const response = await fetch(`http://localhost:5001/api/flights/search?${queryString}`);
+      const response = await fetch(`${API_BASE_URL}/api/flights/search?${queryString}`);
       if (!response.ok) {
         throw new Error('Lỗi khi tải dữ liệu');
       }
@@ -46,7 +47,7 @@ function SearchFlightPage() {
       setIsLoading(false);
     }
   };
-  
+
   return (
     <div className="search-page-container">
       <div className="search-widget-container">

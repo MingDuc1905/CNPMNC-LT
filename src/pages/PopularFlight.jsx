@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import FlightCard from './FlightCard'; 
+import FlightCard from './FlightCard';
+import API_BASE_URL from '../config/api';
 // import './PopularFlights.css'; // Tạm thời không dùng file CSS ngoài
 
 function PopularFlights() {
@@ -7,10 +8,10 @@ function PopularFlights() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5001/api/flights/popular') 
+    fetch(`${API_BASE_URL}/api/flights/popular`)
       .then(response => response.json())
       .then(data => {
-        setPopularFlights(data.slice(0, 3)); 
+        setPopularFlights(data.slice(0, 3));
         setIsLoading(false);
       })
       .catch(error => {
@@ -50,7 +51,7 @@ function PopularFlights() {
     <section style={sectionStyle}>
       {/* === THAY ĐỔI DÒNG NÀY ĐỂ KIỂM TRA === */}
       <h2 style={titleStyle}>KIỂM TRA - CÁC CHUYẾN BAY PHỔ BIẾN</h2>
-      <div style={gridStyle}> 
+      <div style={gridStyle}>
         {popularFlights.map(flight => (
           <FlightCard key={flight.FlightID} flight={flight} />
         ))}

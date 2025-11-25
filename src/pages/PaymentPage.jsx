@@ -1,5 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
+import API_BASE_URL from '../config/api';
 
 function PaymentPage() {
   const location = useLocation();
@@ -14,7 +15,7 @@ function PaymentPage() {
     try {
       console.log("Số tiền cần thanh toán:", bookingInfo.total);
 
-      const res = await fetch('http://localhost:5001/api/payment/create', {
+      const res = await fetch(`${API_BASE_URL}/api/payment/create`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ amount: bookingInfo.total })
@@ -39,7 +40,7 @@ function PaymentPage() {
       <h2>Thanh toán cho chuyến bay</h2>
       <p>Khách hàng: {bookingInfo?.customer?.name}</p>
       <p>Số tiền: <strong>{bookingInfo.total?.toLocaleString('vi-VN')} VND</strong></p>
-<button onClick={handleThanhToan}>Thanh toán qua VNPAY</button>
+      <button onClick={handleThanhToan}>Thanh toán qua VNPAY</button>
     </div>
   );
 }

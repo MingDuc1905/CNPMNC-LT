@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './css/Signup.css'; // Đảm bảo bạn có file CSS này
 import { FaUser, FaEnvelope, FaLock, FaEye, FaEyeSlash, FaPlane, FaPhone } from 'react-icons/fa';
+import API_BASE_URL from '../config/api';
 
 const Signup = () => {
   // THAY ĐỔI 1: Quản lý form bằng một state object duy nhất
@@ -29,7 +30,7 @@ const Signup = () => {
     setMessage('');
 
     try {
-      const response = await fetch('http://localhost:5001/api/auth/register', {
+      const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -85,7 +86,7 @@ const Signup = () => {
         </div>
         <div className="airplane-bg"><FaPlane /></div>
         <p className="skypremier-text">SkyPremier</p>
-        {message && <p className="error-message" style={{color: 'red', marginBottom: '10px'}}>{message}</p>}
+        {message && <p className="error-message" style={{ color: 'red', marginBottom: '10px' }}>{message}</p>}
         {/* Nút đăng ký sẽ trigger submit của form */}
         <button type="submit" className="signup-button" disabled={isLoading} onClick={handleSubmit}>
           {isLoading ? <div className="loading-spinner">⟳</div> : <FaPlane className="airplane-icon" />}

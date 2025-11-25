@@ -5,13 +5,14 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { useAuth } from './context/AuthContext'; // Import hook useAuth
 
 // Import các trang
-import HomePage from './pages/HomePages'; 
+import HomePage from './pages/HomePages';
 import LoginPage from './pages/Login';
 import SignupPage from './pages/Signup';
 import SearchFlightPage from './pages/SearchFlight';
 import UserBookingPage from './pages/UserBooking';
-import BookingPage from './pages/BookingPage'; 
+import BookingPage from './pages/BookingPage';
 import PaymentPage from './pages/PaymentPage';
+import PaymentSuccess from './pages/PaymentSuccess';
 import siteLogo from './assets/images/logo.png';
 import './App.css';
 
@@ -35,14 +36,14 @@ function App() {
               </div>
               <div className="top-bar-right">
                 <Link to="/help">TRỢ GIÚP</Link>
-                
+
                 {/* HIỂN THỊ ĐỘNG TÙY THEO TRẠNG THÁI ĐĂNG NHẬP */}
                 {user ? (
                   <>
                     <Link to="/profile" className="user-info">
-                      <img 
-                        src={`https://ui-avatars.com/api/?name=${user.ho_ten.replace(/\s/g, "+")}&background=0D8ABC&color=fff`} 
-                        alt="avatar" 
+                      <img
+                        src={`https://ui-avatars.com/api/?name=${user.ho_ten.replace(/\s/g, "+")}&background=0D8ABC&color=fff`}
+                        alt="avatar"
                         className="user-avatar"
                       />
                       <span>{user.ho_ten}</span>
@@ -51,7 +52,7 @@ function App() {
                   </>
                 ) : (
                   <>
-                    <Link to="/signup">ĐĂNG KÝ</Link> 
+                    <Link to="/signup">ĐĂNG KÝ</Link>
                     <Link to="/login">ĐĂNG NHẬP</Link>
                   </>
                 )}
@@ -59,11 +60,11 @@ function App() {
               </div>
             </div>
           </div>
-          
+
           <nav className="main-nav">
             <div className="container">
               <Link to="/" className="navbar-brand">
-                <img src={siteLogo} alt="SkyPremier Logo" style={{height: '40px'}} />
+                <img src={siteLogo} alt="SkyPremier Logo" style={{ height: '40px' }} />
                 <span>SkyPremier</span>
               </Link>
               <ul className="nav-links">
@@ -85,6 +86,7 @@ function App() {
             <Route path="/bookings" element={<UserBookingPage />} />
             <Route path="/booking/:id" element={<BookingPage />} />
             <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/payment-success" element={<PaymentSuccess />} />
             <Route path="/profile" element={<div>Trang thông tin cá nhân của {user?.ho_ten}</div>} />
             <Route path="/help" element={<div>Trang Trợ giúp</div>} />
             <Route path="/plan" element={<div>Trang Lên kế hoạch</div>} />
